@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { formatPrice } from '../../util/formatPrice';
 
 import CurrencyButton from '../../components/CurrencyButton';
 import { CurrencyBox, Container } from './styles';
@@ -19,8 +20,9 @@ const Home: React.FC = () => {
   type Bpi = { [K in currencyTypes]: ICurrencyFormat };
 
   const [bit, setBit] = useState<Bpi[]>([]);
-  const [currency, setCurrency] = useState(['USD', 'EUR', 'GBP']);
   const [loading, setLoading] = useState(true);
+
+  const currency = ['USD', 'EUR', 'GBP'];
 
   useEffect(() => {
     async function fetchData() {
@@ -34,12 +36,6 @@ const Home: React.FC = () => {
     fetchData()
   }, [])
 
-  const currency_symbols = {
-    'USD': '$',
-    'EUR': '€',
-    'GBP': '£'
-  };
-
   return (
     <div>
       {loading ? (
@@ -47,11 +43,13 @@ const Home: React.FC = () => {
       ) : (
           <Container>
             <h1>BitCoin Vision</h1>
+            <p>Select your currency:</p>
             <CurrencyBox>
               {currency.map(e => (
-                <CurrencyButton>
+                <CurrencyButton key={bit[e].code}>
                   <h1>{bit[e].code}</h1>
-                  <h2>{currency_symbols[e]}  {bit[e].rate}</h2>
+                  <h2>{formatPrice(bit[e].rate_float, bit[e].code)}</h2>
+
                 </CurrencyButton>))}
             </CurrencyBox>
           </Container>
