@@ -4,7 +4,7 @@ export const Button = styled.button`
   display: flex;
   flex-direction: column;
   align-items: center;
-  background-color: #226CE0;
+  background-color: #3D518C;
   margin: 25px 20px;
   border-radius: 10px;
   border: none;
