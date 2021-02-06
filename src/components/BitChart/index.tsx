@@ -3,15 +3,21 @@ import { Line } from 'react-chartjs-2';
 
 import { formatedDate } from '../../util/formatedDate';
 
-
-
 const BitChart: React.FC = () => {
   const [chartData, setChartData] = useState({});
+  // eslint-disable-next-line
+  const [currencyRate, setCurrencyRate] = useState(() => {
+    const rate = localStorage.getItem('conversionRate');
+    if (rate) {
+      return JSON.parse(rate);
+    }
+
+  });
 
   useEffect(() => {
     getChartData()
+    // eslint-disable-next-line
   }, [])
-
 
   const getChartData = async () => {
     const request = 'https://api.coindesk.com/v1/bpi/historical/close.json?start=' + formatedDate(true) + '&end=' + formatedDate(false);
@@ -19,8 +25,8 @@ const BitChart: React.FC = () => {
     const data = await res.json();
     const categories = Object.keys(data.bpi)
     const usdValues: number[] = Object.values(data.bpi)
-    const eurValues: number[] = usdValues.map(e => e * 0.8217260035)
-    const gbpValues: number[] = usdValues.map(e => e * 0.9368067894)
+    const eurValues: number[] = usdValues.map(e => e * currencyRate.eur)
+    const gbpValues: number[] = usdValues.map(e => e * currencyRate.gbp)
     setChartData({
       labels: categories,
       datasets: [
@@ -30,11 +36,7 @@ const BitChart: React.FC = () => {
           fill: false,
           lineTension: 0.1,
           backgroundColor: 'rgba(75,192,192,0.4)',
-          borderColor: '#4bc0c0',
-          borderJoinStyle: 'miter',
-
-          pointHoverBorderWidth: 2,
-
+          borderColor: '#4bc0c0'
         },
         {
           label: 'Bitcoin price in EUR',
@@ -42,10 +44,7 @@ const BitChart: React.FC = () => {
           fill: false,
           lineTension: 0.1,
           backgroundColor: '#943737',
-          borderColor: '#da5353',
-          borderJoinStyle: 'miter',
-
-          pointHoverBorderWidth: 2,
+          borderColor: '#da5353'
         },
         {
           label: 'Bitcoin price in GBP',
@@ -53,15 +52,11 @@ const BitChart: React.FC = () => {
           fill: false,
           lineTension: 0.1,
           backgroundColor: '#929437',
-          borderColor: '#d1da53',
-          borderJoinStyle: 'miter',
-
-          pointHoverBorderWidth: 2,
+          borderColor: '#d1da53'
         }
       ],
     })
   }
-
 
   return (
     <div>

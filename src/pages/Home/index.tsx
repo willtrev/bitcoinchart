@@ -21,6 +21,7 @@ const Home: React.FC = () => {
   type Bpi = { [K in currencyTypes]: ICurrencyFormat };
 
   const [bit, setBit] = useState<Bpi[]>([]);
+  const [conversionRate, setConversionRate] = useState({});
   const [loading, setLoading] = useState(true);
 
   const currency = ['USD', 'EUR', 'GBP'];
@@ -33,6 +34,10 @@ const Home: React.FC = () => {
         );
         const data = await res.json();
         setBit(data.bpi)
+        setConversionRate({
+          eur: (data.bpi['EUR'].rate_float / data.bpi['USD'].rate_float),
+          gbp: (data.bpi['GBP'].rate_float / data.bpi['USD'].rate_float)
+        })
         setLoading(false)
       } catch (e) {
         console.error(e)
@@ -41,8 +46,9 @@ const Home: React.FC = () => {
     fetchData()
   }, [])
 
-  function handleButtonActive(code: string) {
-    setActiveButton(code);
+  // console.log(conversionRate)
+  if (!loading) {
+    localStorage.setItem('conversionRate', JSON.stringify(conversionRate));
   }
 
   return (
@@ -52,10 +58,9 @@ const Home: React.FC = () => {
       ) : (
           <Container>
             <h1>BitCoin Vision</h1>
-            <p>Select your currency:</p>
             <CurrencyBox>
               {currency.map(e => (
-                <CurrencyButton key={bit[e].code} onClick={() => handleButtonActive(bit[e].code)}>
+                <CurrencyButton key={bit[e].code}>
                   <h1>{bit[e].code}</h1>
                   <h2>{formatPrice(bit[e].rate_float, bit[e].code)}</h2>
 
