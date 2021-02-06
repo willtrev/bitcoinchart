@@ -11,7 +11,6 @@ const BitChart: React.FC = () => {
     if (rate) {
       return JSON.parse(rate);
     }
-
   });
 
   useEffect(() => {
@@ -24,9 +23,10 @@ const BitChart: React.FC = () => {
     const res = await fetch(request);
     const data = await res.json();
     const categories = Object.keys(data.bpi)
-    const usdValues: number[] = Object.values(data.bpi)
-    const eurValues: number[] = usdValues.map(e => e * currencyRate.eur)
-    const gbpValues: number[] = usdValues.map(e => e * currencyRate.gbp)
+    const values: number[] = Object.values(data.bpi)
+    const usdValues: string[] = values.map(e => e.toFixed(2))
+    const eurValues: string[] = values.map(e => (e * currencyRate.eur).toFixed(2))
+    const gbpValues: string[] = values.map(e => (e * currencyRate.gbp).toFixed(2))
     setChartData({
       labels: categories,
       datasets: [
