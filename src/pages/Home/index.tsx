@@ -5,51 +5,19 @@ import CurrencyButton from '../../components/CurrencyButton';
 import BitChart from '../../components/BitChart';
 import { CurrencyBox, Container } from './styles';
 
+import useApi from '../../hooks/useApi';
+
 const Home: React.FC = () => {
-
-  type currencyTypes = "USD" | "EUR" | "GBP";
-
-  interface ICurrencyFormat {
-    code: string;
-    symbol: string;
-    rate: string;
-    description: string;
-    rate_float: number;
-  }
-
-
-  type Bpi = { [K in currencyTypes]: ICurrencyFormat };
-
-  const [bit, setBit] = useState<Bpi[]>([]);
-  const [conversionRate, setConversionRate] = useState({});
   const [loading, setLoading] = useState(true);
-
   const currency = ['USD', 'EUR', 'GBP'];
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const res = await fetch(
-          'https://api.coindesk.com/v1/bpi/currentprice.json'
-        );
-        const data = await res.json();
-        setBit(data.bpi)
-        setConversionRate({
-          eur: (data.bpi['EUR'].rate_float / data.bpi['USD'].rate_float),
-          gbp: (data.bpi['GBP'].rate_float / data.bpi['USD'].rate_float)
-        })
-        setLoading(false)
-      } catch (e) {
-        console.error(e)
-      }
-    }
-    fetchData()
-  }, [])
+  const api = useApi();
 
-  // console.log(conversionRate)
-  if (!loading) {
-    localStorage.setItem('conversionRate', JSON.stringify(conversionRate));
-  }
+  useEffect(() => {
+    if (Object.keys(api).length > 0) {
+      setLoading(false)
+    }
+  }, [api])
 
   return (
     <div>
@@ -60,10 +28,9 @@ const Home: React.FC = () => {
             <h1>BitCoin Vision</h1>
             <CurrencyBox>
               {currency.map(e => (
-                <CurrencyButton key={bit[e].code}>
-                  <h1>{bit[e].code}</h1>
-                  <h2>{formatPrice(bit[e].rate_float, bit[e].code)}</h2>
-
+                <CurrencyButton key={api[e].code}>
+                  <h1>{api[e].code}</h1>
+                  <h2>{formatPrice(api[e].rate_float, api[e].code)}</h2>
                 </CurrencyButton>))}
             </CurrencyBox>
             <BitChart />
@@ -75,6 +42,3 @@ const Home: React.FC = () => {
 }
 
 export default Home;
-
-
-// active button color: #226CE0
