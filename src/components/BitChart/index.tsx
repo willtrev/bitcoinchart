@@ -4,6 +4,7 @@ import { Line } from 'react-chartjs-2';
 import { formatedDate } from '../../util/formatedDate';
 
 const BitChart: React.FC = () => {
+
   const [chartData, setChartData] = useState({});
   // eslint-disable-next-line
   const [currencyRate, setCurrencyRate] = useState(() => {
@@ -14,49 +15,49 @@ const BitChart: React.FC = () => {
   });
 
   useEffect(() => {
+    const getChartData = async () => {
+      const request = 'https://api.coindesk.com/v1/bpi/historical/close.json?start=' + formatedDate(true) + '&end=' + formatedDate(false);
+      const res = await fetch(request);
+      const data = await res.json();
+      const categories = Object.keys(data.bpi)
+      const values: number[] = Object.values(data.bpi)
+      const usdValues = values.map(e => e.toFixed(2))
+      const eurValues = values.map(e => (e * currencyRate.eur).toFixed(2))
+      const gbpValues = values.map(e => (e * currencyRate.gbp).toFixed(2))
+      setChartData({
+        labels: categories,
+        datasets: [
+          {
+            label: 'Bitcoin price in USD',
+            data: usdValues,
+            fill: false,
+            lineTension: 0.1,
+            backgroundColor: 'rgba(75,192,192,0.4)',
+            borderColor: '#4bc0c0'
+          },
+          {
+            label: 'Bitcoin price in EUR',
+            data: eurValues,
+            fill: false,
+            lineTension: 0.1,
+            backgroundColor: '#943737',
+            borderColor: '#da5353'
+          },
+          {
+            label: 'Bitcoin price in GBP',
+            data: gbpValues,
+            fill: false,
+            lineTension: 0.1,
+            backgroundColor: '#929437',
+            borderColor: '#d1da53'
+          }
+        ],
+      })
+    }
     getChartData()
-    // eslint-disable-next-line
-  }, [])
+  }, [currencyRate])
 
-  const getChartData = async () => {
-    const request = 'https://api.coindesk.com/v1/bpi/historical/close.json?start=' + formatedDate(true) + '&end=' + formatedDate(false);
-    const res = await fetch(request);
-    const data = await res.json();
-    const categories = Object.keys(data.bpi)
-    const values: number[] = Object.values(data.bpi)
-    const usdValues: string[] = values.map(e => e.toFixed(2))
-    const eurValues: string[] = values.map(e => (e * currencyRate.eur).toFixed(2))
-    const gbpValues: string[] = values.map(e => (e * currencyRate.gbp).toFixed(2))
-    setChartData({
-      labels: categories,
-      datasets: [
-        {
-          label: 'Bitcoin price in USD',
-          data: usdValues,
-          fill: false,
-          lineTension: 0.1,
-          backgroundColor: 'rgba(75,192,192,0.4)',
-          borderColor: '#4bc0c0'
-        },
-        {
-          label: 'Bitcoin price in EUR',
-          data: eurValues,
-          fill: false,
-          lineTension: 0.1,
-          backgroundColor: '#943737',
-          borderColor: '#da5353'
-        },
-        {
-          label: 'Bitcoin price in GBP',
-          data: gbpValues,
-          fill: false,
-          lineTension: 0.1,
-          backgroundColor: '#929437',
-          borderColor: '#d1da53'
-        }
-      ],
-    })
-  }
+
 
   return (
     <div>
