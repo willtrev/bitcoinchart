@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { formatPrice } from '../../util/formatPrice';
+import { useState, useEffect } from 'react';
 
-import CurrencyButton from '../../components/CurrencyButton';
 import BitChart from '../../components/BitChart';
+import CurrencyButton from '../../components/CurrencyButton';
+
+import formatPrice from '../../utils/formatPrice';
+
 import { CurrencyBox, Container } from './styles';
 
 import useApi from '../../hooks/useApi';
@@ -11,13 +13,13 @@ const Home: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const currency = ['USD', 'EUR', 'GBP'];
 
-  const api = useApi();
+  const bitcoinPriceIndex = useApi();
 
   useEffect(() => {
-    if (Object.keys(api).length > 0) {
+    if (Object.keys(bitcoinPriceIndex).length > 0) {
       setLoading(false)
     }
-  }, [api])
+  }, [bitcoinPriceIndex])
 
   return (
     <div>
@@ -27,10 +29,10 @@ const Home: React.FC = () => {
           <Container>
             <h1>BitCoin Vision</h1>
             <CurrencyBox>
-              {currency.map(e => (
-                <CurrencyButton key={api[e].code}>
-                  <h1>{api[e].code}</h1>
-                  <h2>{formatPrice(api[e].rate_float, api[e].code)}</h2>
+              {currency.map(currencyType => (
+                <CurrencyButton key={bitcoinPriceIndex[currencyType].code}>
+                  <h1>{bitcoinPriceIndex[currencyType].code}</h1>
+                  <h2>{formatPrice(bitcoinPriceIndex[currencyType].rate_float, bitcoinPriceIndex[currencyType].code)}</h2>
                 </CurrencyButton>))}
             </CurrencyBox>
             <BitChart />

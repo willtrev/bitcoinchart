@@ -1,5 +1,4 @@
-
-export function formatPrice(numb: number, currency: string): string {
+export default function formatPrice(numb: number, currency: string): string {
   return (
     Intl.NumberFormat('pt-BR', {
       style: 'currency',

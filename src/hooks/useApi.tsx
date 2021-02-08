@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 
-type currencyTypes = "USD" | "EUR" | "GBP";
+export type currencyTypes = "USD" | "EUR" | "GBP";
 
 interface ICurrencyFormat {
   code: string;
@@ -19,6 +19,14 @@ export default function useApi() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const setBpiAndConversionRate = (bpiData: Bpi) => {
+      setBpi(bpiData);
+      setConversionRate({
+        eur: (bpiData.EUR.rate_float / bpiData.USD.rate_float),
+        gbp: (bpiData.GBP.rate_float / bpiData.USD.rate_float)
+      });
+    }
+
     async function fetchData() {
       try {
         const response = await fetch(
@@ -36,14 +44,6 @@ export default function useApi() {
     fetchData();
     setLoading(false);
   }, []);
-
-  const setBpiAndConversionRate = (bpiData: Bpi) => {
-    setBpi(bpiData);
-    setConversionRate({
-      eur: (bpiData.EUR.rate_float / bpiData.USD.rate_float),
-      gbp: (bpiData.GBP.rate_float / bpiData.USD.rate_float)
-    });
-  }
 
   if (!loading) {
     localStorage.setItem('conversionRate', JSON.stringify(conversionRate));

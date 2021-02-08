@@ -1,5 +1,4 @@
-export function formatedDate(lastWeek: boolean) {
-
+export default function formatedDate(lastWeek: boolean) {
 
   const formatDate = (date: Date) => {
     let d = new Date(date),

@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Line } from 'react-chartjs-2';
 
-import { formatedDate } from '../../util/formatedDate';
+import apiResponse from '../../utils/apiResponse';
+import formatedDate from '../../utils/formatedDate';
 
 const BitChart: React.FC = () => {
 
@@ -15,21 +16,31 @@ const BitChart: React.FC = () => {
   });
 
   useEffect(() => {
+    const dataValues = (data: {}) => {
+      const values: number[] = Object.values(data);
+
+      const allValues = {
+        usdValues: values.map(usdValue => usdValue.toFixed(2)),
+        eurValues: values.map(usdValue => (usdValue * currencyRate.eur).toFixed(2)),
+        gbpValues: values.map(usdValue => (usdValue * currencyRate.gbp).toFixed(2))
+      };
+
+      return allValues;
+    }
+
     const getChartData = async () => {
-      const request = 'https://api.coindesk.com/v1/bpi/historical/close.json?start=' + formatedDate(true) + '&end=' + formatedDate(false);
-      const res = await fetch(request);
-      const data = await res.json();
-      const categories = Object.keys(data.bpi)
-      const values: number[] = Object.values(data.bpi)
-      const usdValues = values.map(e => e.toFixed(2))
-      const eurValues = values.map(e => (e * currencyRate.eur).toFixed(2))
-      const gbpValues = values.map(e => (e * currencyRate.gbp).toFixed(2))
+      const historicalData = await apiResponse(`https://api.coindesk.com/v1/bpi/historical/close.json?start=${formatedDate(true)}&end=${formatedDate(false)}`)
+
+      const categories = Object.keys(historicalData);
+
+      const historicalDataValues = dataValues(historicalData);
+
       setChartData({
         labels: categories,
         datasets: [
           {
             label: 'Bitcoin price in USD',
-            data: usdValues,
+            data: historicalDataValues.usdValues,
             fill: false,
             lineTension: 0.1,
             backgroundColor: 'rgba(75,192,192,0.4)',
@@ -37,7 +48,7 @@ const BitChart: React.FC = () => {
           },
           {
             label: 'Bitcoin price in EUR',
-            data: eurValues,
+            data: historicalDataValues.eurValues,
             fill: false,
             lineTension: 0.1,
             backgroundColor: '#943737',
@@ -45,7 +56,7 @@ const BitChart: React.FC = () => {
           },
           {
             label: 'Bitcoin price in GBP',
-            data: gbpValues,
+            data: historicalDataValues.gbpValues,
             fill: false,
             lineTension: 0.1,
             backgroundColor: '#929437',
@@ -56,8 +67,6 @@ const BitChart: React.FC = () => {
     }
     getChartData()
   }, [currencyRate])
-
-
 
   return (
     <div>
