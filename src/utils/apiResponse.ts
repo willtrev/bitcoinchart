@@ -1,7 +1,13 @@
 export default async function apiResponse(urlRequest: string) {
-  const request = urlRequest;
-  const rawData = await fetch(request);
-  const response = await rawData.json();
 
-  return response.bpi;
+  try {
+    const rawData = await fetch(urlRequest);
+    const response = await rawData.json();
+
+    return response.bpi;
+
+  } catch (error) {
+    console.error(error);
+  }
+
 }

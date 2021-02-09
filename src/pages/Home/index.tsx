@@ -5,7 +5,9 @@ import CurrencyButton from '../../components/CurrencyButton';
 
 import formatPrice from '../../utils/formatPrice';
 
-import { CurrencyBox, Container } from './styles';
+import { CurrencyBox, Container, LoadingContainer } from './styles';
+
+import loadingGif from '../../assets/loadingGif.gif';
 
 import useApi from '../../hooks/useApi';
 
@@ -24,7 +26,11 @@ const Home: React.FC = () => {
   return (
     <div>
       {loading ? (
-        <h1>Loading</h1>
+        <LoadingContainer>
+          <img src={loadingGif} alt='loading' />
+          <h2>Loading...</h2>
+        </LoadingContainer>
+
       ) : (
           <Container>
             <h1>BitCoin Vision</h1>

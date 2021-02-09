@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 
+import apiResponse from '../utils/apiResponse';
+
 export type currencyTypes = "USD" | "EUR" | "GBP";
 
 interface ICurrencyFormat {
@@ -28,18 +30,9 @@ export default function useApi() {
     }
 
     async function fetchData() {
-      try {
-        const response = await fetch(
-          'https://api.coindesk.com/v1/bpi/currentprice.json'
-        );
+      const bpiData = await apiResponse('https://api.coindesk.com/v1/bpi/currentprice.json');
 
-        const data = await response.json();
-
-        setBpiAndConversionRate(data.bpi);
-
-      } catch (error) {
-        console.error(error)
-      }
+      setBpiAndConversionRate(bpiData);
     }
     fetchData();
     setLoading(false);

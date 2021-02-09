@@ -15,6 +15,7 @@ const BitChart: React.FC = () => {
     }
   });
 
+
   useEffect(() => {
     const dataValues = (data: {}) => {
       const values: number[] = Object.values(data);
@@ -63,8 +64,10 @@ const BitChart: React.FC = () => {
             borderColor: '#d1da53'
           }
         ],
+
       })
     }
+
     getChartData()
   }, [currencyRate])
 

@@ -21,3 +21,16 @@ export const CurrencyBox = styled.div`
   flex-direction: row;
 `;
 
+export const LoadingContainer = styled.div`
+    min-height: 100vh;
+    display: flex;
+    flex-direction:column;
+    justify-content: center;
+    align-items: center;
+
+    h2{
+      margin-top: 10px;
+    }
+`;
+
+
