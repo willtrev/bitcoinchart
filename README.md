@@ -1,8 +1,11 @@
+### A pagina pode ser encontrada no link:
+`https://jovial-ptolemy-98644f.netlify.app`
+
 # Desafio Técnico Vaga Frontend
 
 Para o desafio técnico queremos um pequeno aplicativo React para mostrar o preço do Bitcoin.
 
-Para isso utilize a API do CoinDesk (https://www.coindesk.com/coindesk-api) para exibir na página inicial o valor para três câmbios diferentes, Dólar, Libra Esterlina e Euro. Adicione também um gráfico simples que mostre os valores em um período de 7 dias. 
+Para isso utilize a API do CoinDesk (https://www.coindesk.com/coindesk-api) para exibir na página inicial o valor para três câmbios diferentes, Dólar, Libra Esterlina e Euro. Adicione também um gráfico simples que mostre os valores em um período de 7 dias.
 
 ## Requisitos
 
@@ -15,7 +18,7 @@ Para isso utilize a API do CoinDesk (https://www.coindesk.com/coindesk-api) para
 
 
 ## O que nós avaliaremos
-    
+
 - Boa estrutura de pasta e arquivos
 - Capacidade de componentizar a interface
 - Capacidade de escrever código coeso e legível
